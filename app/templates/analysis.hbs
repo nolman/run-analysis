@@ -1,0 +1,6 @@
+<div class="analysis-container">
+  {{#each @model as |log|}}
+    <LogGraph @log={{log}} @msPerPixel={{this.msPerPixel}} />
+  {{/each}}
+  <GraphScale @msPerPixel={{this.msPerPixel}} />
+</div>

@@ -1,0 +1,16 @@
+<div class="log-header">
+  <h2 class='d-inline-block'>{{@log.title}}</h2>
+  <button type="button" disabled={{eq this.startOffset 0}} {{on "click" this.resetOffset}}>
+    <FaIcon @icon="redo" />
+  </button>
+  <button type="button">
+    <FaIcon @icon="trash" />
+  </button>
+</div>
+<div class="log-container d-flex">
+  <div class="log-graph flex-grow">
+    {{#each @log.fights as |fight|}}
+      <Fight @fight={{fight}} @startOffset={{this.startOffset}} @setStartOffset={{this.setStartOffset}} @msPerPixel={{@msPerPixel}} />
+    {{/each}}
+  </div>
+</div>

@@ -43,7 +43,7 @@ module.exports = function(environment) {
     ENV.APP.autoboot = false;
   }
   if (environment === 'production') {
-    ENV.baseURL = '/run-analysis'
+    ENV.rootURL = '/run-analysis'
   }
 
   return ENV;

@@ -1,0 +1,10 @@
+<%= render "shared/mail_header", gift: @gift do %>
+  <h2 class="text-left mb-4">Your gift to <%= @gift.from_name %> has shipped!</h2>
+  <label class="footer">To</label>
+  <h3 class="mb-4"><%= @gift.to_email %></h3>
+  <label class="footer">Note</label>
+  <h3><%= @gift.note %></h3>
+  <a href="<%= @gift.tracking_url %>" class="text-center mt-3 btn btn-fancy">
+    Track Package
+  </a>
+<% end %>

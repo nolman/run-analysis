@@ -1,6 +1,6 @@
 <div class="log-header">
-  <h2 class='d-inline-block'>{{@log.title}}</h2>
-  <button type="button" disabled={{eq this.startOffset 0}} {{on "click" this.resetOffset}}>
+  <h2 class='d-inline-block'>{{@log.title}}</h2> - {{@key}}
+  <button type="button" disabled={{eq this.startOffset 0}} {{on "click" this.resetOffset}} title="Reset start">
     <FaIcon @icon="redo" />
   </button>
   <button type="button" {{on "click" @removeLog}}>

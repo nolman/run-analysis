@@ -5,12 +5,18 @@
 <div class="search-container">
 </div>
 <div class="analysis-container">
-  {{#each-in @model as |key log|}}
-    <LogGraph @log={{log}} @msPerPixel={{this.msPerPixel}} @removeLog={{fn this.removeLog key}}/>
+  {{#each-in @model as |key instance|}}
+    <LogGraph @key={{key}}
+              @log={{instance.data}}
+              @msPerPixel={{this.msPerPixel}}
+              @removeLog={{fn this.removeLog key}}/>
   {{else}}
     <div class="landing">
       Import a Warcraft log id to get started.
     </div>
   {{/each-in}}
-  <GraphScale @msPerPixel={{this.msPerPixel}} />
+  {{#if @model}}
+  {{log this.maxLength}}
+    <GraphScale @msPerPixel={{this.msPerPixel}} @maxLength={{this.maxRaidLength}} />
+  {{/if}}
 </div>

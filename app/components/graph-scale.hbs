@@ -1,3 +1,5 @@
 <div class="axis">
-  
+  {{#each this.intervals as |interval|}}
+    <Marker @interval={{interval}} @msPerPixel={{@msPerPixel}} />
+  {{/each}}
 </div>

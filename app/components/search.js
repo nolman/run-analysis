@@ -10,6 +10,8 @@ export default class SearchComponent extends Component {
   @action
   search(e) {
     e.preventDefault();
+    let existingLogs = this.router.currentRoute.params.logids;
+    
     this.router.transitionTo('analysis', this.logid);
   }
 }

@@ -1,1 +1,16 @@
-Import a Warcraft log id to get started.
+<form class="search-box" {{on "submit" this.addLog}}>
+  <Input @value={{this.newLogId}} class="form-control" placeholder="Log Id" type="text" />
+  <button type="submit">Import</button>
+</form>
+<div class="search-container">
+</div>
+<div class="analysis-container">
+  {{#each-in @model as |key log|}}
+    <LogGraph @log={{log}} @msPerPixel={{this.msPerPixel}} @removeLog={{fn this.removeLog key}}/>
+  {{else}}
+    <div class="landing">
+      Import a Warcraft log id to get started.
+    </div>
+  {{/each-in}}
+  <GraphScale @msPerPixel={{this.msPerPixel}} />
+</div>

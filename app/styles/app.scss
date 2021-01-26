@@ -58,9 +58,14 @@ $radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding-top: 20px;
   top: 0px;
   width: 100%;
+}
+
+.landing {
+  display: flex;
+  justify-content: center;
 }
 
 h2 {

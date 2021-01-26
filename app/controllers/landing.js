@@ -31,7 +31,7 @@ export default class LandingController extends Controller {
   }
   @action
   removeLog(logId) {
-    let existingIds = compact(this.logids.split(','))
+    let existingIds = compact(this.logids.split('~'))
     let newLogsIds = without(existingIds, logId);
     this.logids = newLogsIds.join(',') ;
   }

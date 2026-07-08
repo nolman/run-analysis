@@ -65,4 +65,39 @@
       {{/if}}
     </div>
   </section>
+
+  {{#if this.hasBreakdownRows}}
+    <section class="breakdown-section">
+      <h2>Run Breakdown</h2>
+      <div class="breakdown-table-wrap">
+        <table class="breakdown-table">
+          <thead>
+            <tr>
+              <th scope="col">Segment</th>
+              {{#each this.summaryRuns as |run|}}
+                <th scope="col">{{run.title}}</th>
+              {{/each}}
+            </tr>
+          </thead>
+          <tbody>
+            {{#each this.breakdownRows as |row|}}
+              <tr class="breakdown-row {{row.className}}">
+                <th scope="row">
+                  <span class="breakdown-label">{{row.label}}</span>
+                </th>
+                {{#each row.cells as |cell|}}
+                  <td class={{if cell.missing "is-missing"}}>
+                    <span class="breakdown-duration">{{cell.formattedDuration}}</span>
+                    {{#if cell.formattedDelta}}
+                      <span class="breakdown-delta {{cell.deltaClass}}">{{cell.formattedDelta}}</span>
+                    {{/if}}
+                  </td>
+                {{/each}}
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  {{/if}}
 </main>

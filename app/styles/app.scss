@@ -369,6 +369,134 @@ h1 {
   font-weight: 700;
 }
 
+.breakdown-section {
+  margin-top: 20px;
+}
+
+.breakdown-section h2 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.breakdown-table-wrap {
+  border: 1px solid $line;
+  border-radius: 8px;
+  overflow: auto;
+}
+
+.breakdown-table {
+  background: $surface;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 680px;
+  width: 100%;
+}
+
+.breakdown-table th,
+.breakdown-table td {
+  border-bottom: 1px solid $line-soft;
+  font-size: 13px;
+  padding: 10px 14px;
+  vertical-align: middle;
+}
+
+.breakdown-table thead th {
+  background: $surface-soft;
+  border-bottom: 1px solid $line;
+  color: $muted;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  position: sticky;
+  text-align: right;
+  text-transform: uppercase;
+  top: 0;
+  z-index: 1;
+}
+
+.breakdown-table thead th:first-child,
+.breakdown-table tbody th {
+  left: 0;
+  position: sticky;
+  text-align: left;
+  z-index: 2;
+}
+
+.breakdown-table thead th:first-child {
+  z-index: 3;
+}
+
+.breakdown-table tbody th {
+  background: $surface;
+  border-right: 1px solid $line;
+  min-width: 240px;
+}
+
+.breakdown-table tbody td {
+  color: $ink;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.breakdown-table tbody td.is-missing {
+  color: $subtle;
+}
+
+.breakdown-table tbody tr:last-child th,
+.breakdown-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.breakdown-label {
+  display: block;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.breakdown-duration {
+  display: inline-block;
+  min-width: 56px;
+}
+
+.breakdown-delta {
+  border-radius: 999px;
+  display: inline-block;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  margin-left: 8px;
+  min-width: 38px;
+  padding: 4px 6px;
+  text-align: center;
+}
+
+.delta--slower {
+  background: rgba($danger, 0.12);
+  color: $danger;
+}
+
+.delta--faster {
+  background: rgba($success, 0.12);
+  color: $success;
+}
+
+.breakdown-row--boss th {
+  box-shadow: inset 4px 0 0 $success;
+}
+
+.breakdown-row--gap th {
+  box-shadow: inset 4px 0 0 $warning;
+}
+
+.breakdown-row--trash th {
+  box-shadow: inset 4px 0 0 $info;
+}
+
 .ember-popover {
   background: $surface;
   border: 1px solid $line;

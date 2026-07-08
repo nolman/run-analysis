@@ -1,16 +1,30 @@
-<div class="log-header">
-  <h2 class='d-inline-block'>{{@log.title}}</h2> - {{@key}}
-  <button type="button" disabled={{eq this.startOffset 0}} {{on "click" this.resetOffset}} title="Reset start">
-    <FaIcon @icon="redo" />
-  </button>
-  <button type="button" {{on "click" @removeLog}}>
-    <FaIcon @icon="trash" />
-  </button>
-</div>
-<div class="log-container d-flex">
-  <div class="log-graph flex-grow">
-    {{#each @log.fights as |fight|}}
-      <Fight @fight={{fight}} @startOffset={{this.startOffset}} @setStartOffset={{this.setStartOffset}} @msPerPixel={{@msPerPixel}} />
-    {{/each}}
+<div class="run-row">
+  <div class="run-label">
+    <div>
+      <h2>{{@log.title}}</h2>
+      <div class="run-id">{{@key}}</div>
+    </div>
+
+    <div class="run-actions">
+      <button class="icon-button" type="button" disabled={{eq this.startOffset 0}} {{on "click" this.resetOffset}} title="Reset start">
+        <FaIcon @icon="redo" />
+      </button>
+      <button class="icon-button danger" type="button" {{on "click" @removeLog}} title="Remove run">
+        <FaIcon @icon="trash" />
+      </button>
+    </div>
+  </div>
+
+  <div class="timeline-viewport">
+    <div class="log-graph" style={{this.timelineStyle}}>
+      {{#each @log.fights as |fight|}}
+        <Fight
+          @fight={{fight}}
+          @startOffset={{this.startOffset}}
+          @setStartOffset={{this.setStartOffset}}
+          @msPerPixel={{@msPerPixel}}
+        />
+      {{/each}}
+    </div>
   </div>
 </div>

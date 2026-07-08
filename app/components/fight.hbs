@@ -1,9 +1,23 @@
 <div class="fight-block {{this.fightColor}}" style={{this.styleAttributes}}>
-  <EmberPopover @delay={{200}} @popperOptions={{this.popperOptions}} as |popover|>
-    <h3>{{this.name}}</h3>
-    <div>
-      Length: {{this.fightLength}}
+  <EmberPopover
+    @delay={{200}}
+    @popperContainer="body"
+    @popperOptions={{this.popperOptions}}
+    @side="top"
+    @spacing={{0}}
+  >
+    <div class="fight-popover">
+      <div class="fight-popover-heading">
+        <h3>{{this.name}}</h3>
+        <span class="fight-result">{{this.fightResult}}</span>
+      </div>
+      <div class="fight-meta">
+        <span>Length</span>
+        <strong>{{this.formattedFightLength}}</strong>
+      </div>
+      <button class="secondary-button" type="button" {{on "click" (fn @setStartOffset this.startTime)}}>
+        Make Start
+      </button>
     </div>
-    <button {{on "click" (fn @setStartOffset this.startTime)}}>Make Start</button>
   </EmberPopover>
 </div>

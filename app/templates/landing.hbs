@@ -1,22 +1,68 @@
-<form class="search-box" {{on "submit" this.addLog}}>
-  <Input @value={{this.newLogId}} class="form-control" placeholder="Log Id" type="text" />
-  <button type="submit">Import</button>
-</form>
-<div class="search-container">
-</div>
-<div class="analysis-container">
-  {{#each-in @model as |key instance|}}
-    <LogGraph @key={{key}}
-              @log={{instance.data}}
-              @msPerPixel={{this.msPerPixel}}
-              @removeLog={{fn this.removeLog key}}/>
-  {{else}}
-    <div class="landing">
-      Import a Warcraft log id to get started.
+<main class="app-shell">
+  <header class="app-toolbar">
+    <div class="app-title-group">
+      <h1>Run Analysis</h1>
+      <div class="toolbar-meta">{{this.runCountLabel}}</div>
     </div>
-  {{/each-in}}
-  {{#if @model}}
-  {{log this.maxLength}}
-    <GraphScale @msPerPixel={{this.msPerPixel}} @maxLength={{this.maxRaidLength}} />
+
+    <form class="search-box" {{on "submit" this.addLog}}>
+      <Input
+        @value={{this.newLogId}}
+        aria-label="Warcraft Logs report ID"
+        class="form-control"
+        placeholder="Warcraft Logs report ID"
+        type="text"
+      />
+      <button class="primary-button" type="submit">
+        <FaIcon @icon="plus" />
+        <span>Import</span>
+      </button>
+    </form>
+  </header>
+
+  {{#if this.hasRuns}}
+    <section class="summary-strip" aria-label="Run summary">
+      <div class="metric">
+        <span class="metric-label">Fastest</span>
+        <strong>{{this.formattedFastestRaidLength}}</strong>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Slowest</span>
+        <strong>{{this.formattedSlowestRaidLength}}</strong>
+      </div>
+      <div class="metric">
+        <span class="metric-label">Spread</span>
+        <strong>{{this.formattedRaidSpread}}</strong>
+      </div>
+    </section>
   {{/if}}
-</div>
+
+  <section class="analysis-container">
+    <div class="timeline-shell">
+      {{#each-in @model as |key instance|}}
+        <LogGraph
+          @key={{key}}
+          @log={{instance.data}}
+          @maxRaidLength={{this.maxRaidLength}}
+          @msPerPixel={{this.msPerPixel}}
+          @startOffset={{or (get this.startOffsets key) 0}}
+          @setStartOffset={{fn this.setStartOffset key}}
+          @removeLog={{fn this.removeLog key}}
+        />
+      {{else}}
+        <div class="landing">
+          <h2>No runs loaded</h2>
+        </div>
+      {{/each-in}}
+
+      {{#if this.hasRuns}}
+        <div class="scale-row">
+          <div class="scale-label">Time</div>
+          <div class="timeline-viewport">
+            <GraphScale @msPerPixel={{this.msPerPixel}} @maxLength={{this.maxRaidLength}} />
+          </div>
+        </div>
+      {{/if}}
+    </div>
+  </section>
+</main>

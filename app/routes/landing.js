@@ -8,7 +8,7 @@ export default class LandingRoute extends Route {
     offsets: { refreshModel: false }
   };
   model(params) {
-    let logIds = compact(params.logids.split('~'));
+    let logIds = compact((params.logids || '').split('~'));
     let rsvpHash = {};
 
     logIds.map((logId) => {

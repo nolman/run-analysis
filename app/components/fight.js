@@ -1,41 +1,77 @@
 import Component from '@glimmer/component';
-import { alias } from '@ember/object/computed';
-import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/template';
 
 export default class FightComponent extends Component {
   popperOptions = {
     modifiers: {
+      flip: {
+        enabled: false
+      },
+      offset: {
+        offset: '0, -27'
+      },
       preventOverflow: {
+        enabled: false,
         escapeWithReference: false
       }
     }
   };
 
-  @alias('args.fight') fight;
-  @alias('args.msPerPixel') msPerPixel;
-  @alias('args.startOffset') startOffset;
-  @alias('args.fight.start_time') startTime;
-  @alias('args.fight.end_time') endTime;
-  @alias('args.fight.name') name;
-  @alias('args.fight.boss') bossId;
+  get fight() {
+    return this.args.fight;
+  }
 
-  @computed('args.fight.boss', 'args.fight.name')
+  get msPerPixel() {
+    return this.args.msPerPixel;
+  }
+
+  get startOffset() {
+    return this.args.startOffset;
+  }
+
+  get startTime() {
+    return this.fight.start_time;
+  }
+
+  get endTime() {
+    return this.fight.end_time;
+  }
+
+  get name() {
+    return this.fight.name;
+  }
+
+  get bossId() {
+    return this.fight.boss;
+  }
+
   get isBoss() {
     return this.bossId !== 0;
   }
 
-  @computed('args.fight.start_time', 'args.startOffset')
   get adjustedStartTime() {
     return this.startTime - this.startOffset;
   }
 
-  @computed('args.fight.{start_time,end_time}')
   get fightLength() {
     return (this.endTime - this.startTime) / 1000;
   }
 
-  @computed('args.fight.boss', 'args.fight.kill')
+  get formattedFightLength() {
+    let minutes = Math.floor(this.fightLength / 60);
+    let seconds = Math.round(this.fightLength % 60).toString().padStart(2, '0');
+
+    return `${minutes}:${seconds}`;
+  }
+
+  get fightResult() {
+    if (!this.isBoss) {
+      return 'Trash';
+    }
+
+    return this.fight.kill ? 'Kill' : 'Wipe';
+  }
+
   get fightColor() {
     if(this.isBoss) {
       if(this.fight.kill) {
@@ -48,11 +84,10 @@ export default class FightComponent extends Component {
     }
   }
 
-  @computed('args.fight.id', 'args.startOffset')
   get styleAttributes() {
-    let width = (this.endTime - this.startTime) / this.msPerPixel;
+    let width = Math.max((this.endTime - this.startTime) / this.msPerPixel, 4);
     let leftOffset = (this.adjustedStartTime) / this.msPerPixel;
-    let fightColor = this.isBoss ? 'blue' : 'red';
+
     return htmlSafe(`width: ${width}px; left: ${leftOffset}px;`);
   }
 }

@@ -138,4 +138,56 @@ module('Unit | Controller | landing', function(hooks) {
     assert.deepEqual(rows[2].cells.map((cell) => cell.formattedDelta), ['', '']);
     assert.deepEqual(rows[4].cells.map((cell) => cell.formattedDelta), ['+30s', '-30s']);
   });
+
+  test('it aggregates cooldowns by cooldown, run, and player', function(assert) {
+    let controller = this.owner.lookup('controller:landing');
+    controller.offsets = 'firstLog:60000';
+    controller.model = {
+      firstLog: {
+        data: {
+          title: 'First Run',
+          fights: [
+            { boss: 0, name: 'Trash', start_time: 0, end_time: 60000 },
+            { boss: 101, name: 'Boss One', start_time: 120000, end_time: 180000 }
+          ]
+        },
+        cooldowns: [
+          { key: 'death-wish', name: 'Death Wish', timestamp: 30000, sourceName: 'Warrior One' },
+          { key: 'death-wish', name: 'Death Wish', timestamp: 90000, sourceName: 'Warrior One' },
+          { key: 'death-wish', name: 'Death Wish', timestamp: 150000, sourceName: 'Warrior Two' },
+          { key: 'recklessness', name: 'Recklessness', timestamp: 120000, sourceName: 'Warrior One' }
+        ]
+      },
+      secondLog: {
+        data: {
+          title: 'Second Run',
+          fights: [
+            { boss: 0, name: 'Trash', start_time: 0, end_time: 60000 },
+            { boss: 101, name: 'Boss One', start_time: 90000, end_time: 150000 }
+          ]
+        },
+        cooldowns: [
+          { key: 'death-wish', name: 'Death Wish', timestamp: 60000, sourceName: 'Warrior Three' }
+        ]
+      }
+    };
+
+    let rows = controller.cooldownRows;
+
+    assert.deepEqual(rows.map((row) => row.label), ['Death Wish', 'Recklessness']);
+    assert.strictEqual(rows[0].cells[0].count, 2);
+    assert.strictEqual(rows[0].cells[0].formattedUses, '2 uses');
+    assert.deepEqual(rows[0].cells[0].players.map((player) => {
+      return `${player.name}: ${player.formattedUses} at ${player.formattedTimes}`;
+    }), [
+      'Warrior One: 1 use at 0:30',
+      'Warrior Two: 1 use at 1:30'
+    ]);
+    assert.strictEqual(rows[0].cells[1].count, 1);
+    assert.deepEqual(rows[0].cells[1].players.map((player) => {
+      return `${player.name}: ${player.formattedUses} at ${player.formattedTimes}`;
+    }), ['Warrior Three: 1 use at 1:00']);
+    assert.strictEqual(rows[1].cells[0].players[0].formattedTimes, '1:00');
+    assert.true(rows[1].cells[1].isEmpty);
+  });
 });

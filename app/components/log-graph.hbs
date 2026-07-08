@@ -25,6 +25,15 @@
           @msPerPixel={{@msPerPixel}}
         />
       {{/each}}
+
+      {{#if @showCooldowns}}
+        {{#each @cooldowns as |cooldown|}}
+          <CooldownMarker
+            @cooldown={{cooldown}}
+            @msPerPixel={{@msPerPixel}}
+          />
+        {{/each}}
+      {{/if}}
     </div>
   </div>
 </div>

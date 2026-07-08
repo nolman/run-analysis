@@ -87,6 +87,31 @@ h1 {
   width: 100%;
 }
 
+.toolbar-controls {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.checkbox-control {
+  align-items: center;
+  color: $muted;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 13px;
+  font-weight: 700;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.checkbox-control input {
+  accent-color: $accent;
+  height: 16px;
+  width: 16px;
+}
+
 .form-control {
   background: $surface;
   border: 1px solid $line;
@@ -297,6 +322,28 @@ h1 {
   transform: translateY(-1px);
 }
 
+.cooldown-marker {
+  border-left: 2px solid rgba($warning, 0.9);
+  bottom: 5px;
+  position: absolute;
+  top: 5px;
+  width: 0;
+  z-index: 4;
+}
+
+.cooldown-marker::before {
+  background: $warning;
+  border: 2px solid $surface;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba($ink, 0.18);
+  content: "";
+  height: 8px;
+  left: -5px;
+  position: absolute;
+  top: -3px;
+  width: 8px;
+}
+
 .bg-success {
   background-color: $success;
 }
@@ -369,11 +416,13 @@ h1 {
   font-weight: 700;
 }
 
-.breakdown-section {
+.breakdown-section,
+.cooldown-section {
   margin-top: 20px;
 }
 
-.breakdown-section h2 {
+.breakdown-section h2,
+.cooldown-section h2 {
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 0;
@@ -497,6 +546,38 @@ h1 {
   box-shadow: inset 4px 0 0 $info;
 }
 
+.cooldown-table tbody td {
+  max-width: 360px;
+  min-width: 210px;
+  text-align: left;
+  vertical-align: top;
+  white-space: normal;
+}
+
+.cooldown-uses {
+  display: block;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.cooldown-player {
+  color: $muted;
+  display: block;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.cooldown-player strong {
+  color: $ink;
+  font-weight: 700;
+}
+
+.cooldown-empty {
+  color: $subtle;
+}
+
 .ember-popover {
   background: $surface;
   border: 1px solid $line;
@@ -563,8 +644,14 @@ h1 {
     grid-template-columns: 1fr;
   }
 
+  .toolbar-controls,
   .search-box {
     justify-content: stretch;
+  }
+
+  .toolbar-controls {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .summary-strip {

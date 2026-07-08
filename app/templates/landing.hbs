@@ -5,19 +5,29 @@
       <div class="toolbar-meta">{{this.runCountLabel}}</div>
     </div>
 
-    <form class="search-box" {{on "submit" this.addLog}}>
-      <Input
-        @value={{this.newLogId}}
-        aria-label="Warcraft Logs report ID"
-        class="form-control"
-        placeholder="Warcraft Logs report ID"
-        type="text"
-      />
-      <button class="primary-button" type="submit">
-        <FaIcon @icon="plus" />
-        <span>Import</span>
-      </button>
-    </form>
+    <div class="toolbar-controls">
+      <label class="checkbox-control">
+        <Input
+          @checked={{this.showCooldowns}}
+          @type="checkbox"
+        />
+        <span>Show cooldowns</span>
+      </label>
+
+      <form class="search-box" {{on "submit" this.addLog}}>
+        <Input
+          @value={{this.newLogId}}
+          aria-label="Warcraft Logs report ID"
+          class="form-control"
+          placeholder="Warcraft Logs report ID"
+          type="text"
+        />
+        <button class="primary-button" type="submit">
+          <FaIcon @icon="plus" />
+          <span>Import</span>
+        </button>
+      </form>
+    </div>
   </header>
 
   {{#if this.hasRuns}}
@@ -39,21 +49,23 @@
 
   <section class="analysis-container">
     <div class="timeline-shell">
-      {{#each-in @model as |key instance|}}
+      {{#each this.summaryRuns as |run|}}
         <LogGraph
-          @key={{key}}
-          @log={{instance.data}}
+          @key={{run.logId}}
+          @log={{run}}
+          @cooldowns={{run.cooldowns}}
           @maxRaidLength={{this.maxRaidLength}}
           @msPerPixel={{this.msPerPixel}}
-          @startOffset={{or (get this.startOffsets key) 0}}
-          @setStartOffset={{fn this.setStartOffset key}}
-          @removeLog={{fn this.removeLog key}}
+          @showCooldowns={{this.showCooldowns}}
+          @startOffset={{run.startOffset}}
+          @setStartOffset={{fn this.setStartOffset run.logId}}
+          @removeLog={{fn this.removeLog run.logId}}
         />
       {{else}}
         <div class="landing">
           <h2>No runs loaded</h2>
         </div>
-      {{/each-in}}
+      {{/each}}
 
       {{#if this.hasRuns}}
         <div class="scale-row">
@@ -90,6 +102,48 @@
                     <span class="breakdown-duration">{{cell.formattedDuration}}</span>
                     {{#if cell.formattedDelta}}
                       <span class="breakdown-delta {{cell.deltaClass}}">{{cell.formattedDelta}}</span>
+                    {{/if}}
+                  </td>
+                {{/each}}
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  {{/if}}
+
+  {{#if this.hasCooldownRows}}
+    <section class="cooldown-section">
+      <h2>Cooldowns</h2>
+      <div class="breakdown-table-wrap">
+        <table class="breakdown-table cooldown-table">
+          <thead>
+            <tr>
+              <th scope="col">Cooldown</th>
+              {{#each this.summaryRuns as |run|}}
+                <th scope="col">{{run.title}}</th>
+              {{/each}}
+            </tr>
+          </thead>
+          <tbody>
+            {{#each this.cooldownRows as |row|}}
+              <tr>
+                <th scope="row">
+                  <span class="breakdown-label">{{row.label}}</span>
+                </th>
+                {{#each row.cells as |cell|}}
+                  <td class={{if cell.isEmpty "is-missing"}}>
+                    {{#if cell.isEmpty}}
+                      <span class="cooldown-empty">-</span>
+                    {{else}}
+                      <span class="cooldown-uses">{{cell.formattedUses}}</span>
+                      {{#each cell.players as |player|}}
+                        <span class="cooldown-player">
+                          <strong>{{player.name}}</strong>
+                          <span>{{player.formattedUses}} at {{player.formattedTimes}}</span>
+                        </span>
+                      {{/each}}
                     {{/if}}
                   </td>
                 {{/each}}

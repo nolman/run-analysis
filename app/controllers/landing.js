@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { compact, concat, max, min, sum, times, uniq, values, without } from 'lodash';
+import { DPS_COOLDOWN_DEFINITIONS } from 'run-analysis/utils/dps-cooldowns';
 
 const OFFSET_SEPARATOR = '~';
 const OFFSET_PAIR_SEPARATOR = ':';
@@ -12,6 +13,7 @@ export default class LandingController extends Controller {
   @tracked logids = '';
   @tracked offsets = '';
   @tracked msPerPixel = 5000;
+  @tracked showCooldowns = false;
 
   get runs() {
     return values(this.model || {});
@@ -46,6 +48,7 @@ export default class LandingController extends Controller {
         title: log.title || logId,
         startOffset,
         fights,
+        cooldowns: this.cooldownsForRun(this.model[logId].cooldowns || [], startOffset),
         bossFights: fights.filter((fight) => {
           return fight.boss !== 0;
         })
@@ -55,6 +58,34 @@ export default class LandingController extends Controller {
 
   get hasBreakdownRows() {
     return this.breakdownRows.length > 0;
+  }
+
+  get hasCooldownRows() {
+    return this.cooldownRows.length > 0;
+  }
+
+  get cooldownRows() {
+    let cooldownKeys = uniq(this.summaryRuns.map((run) => {
+      return run.cooldowns.map((cooldown) => {
+        return cooldown.key;
+      });
+    }).flat()).sort((firstKey, secondKey) => {
+      return this.cooldownSortIndex(firstKey) - this.cooldownSortIndex(secondKey);
+    });
+
+    return cooldownKeys.map((cooldownKey) => {
+      let cooldown = this.cooldownDefinition(cooldownKey);
+
+      return {
+        key: cooldownKey,
+        label: cooldown ? cooldown.name : this.cooldownLabel(cooldownKey),
+        cells: this.summaryRuns.map((run) => {
+          return this.cooldownCell(run.cooldowns.filter((runCooldown) => {
+            return runCooldown.key === cooldownKey;
+          }));
+        })
+      };
+    });
   }
 
   get breakdownRows() {
@@ -236,6 +267,95 @@ export default class LandingController extends Controller {
     }).map((fight) => {
       return fight.end_time - startOffset;
     })) || 0;
+  }
+
+  cooldownsForRun(cooldowns, startOffset) {
+    return cooldowns.filter((cooldown) => {
+      return cooldown.timestamp >= startOffset;
+    }).sort((firstCooldown, secondCooldown) => {
+      return firstCooldown.timestamp - secondCooldown.timestamp;
+    }).map((cooldown) => {
+      let offset = cooldown.timestamp - startOffset;
+
+      return {
+        ...cooldown,
+        offset,
+        formattedTime: this.formatClock(offset)
+      };
+    });
+  }
+
+  cooldownDefinition(cooldownKey) {
+    return DPS_COOLDOWN_DEFINITIONS.find((cooldown) => {
+      return cooldown.key === cooldownKey;
+    });
+  }
+
+  cooldownSortIndex(cooldownKey) {
+    let index = DPS_COOLDOWN_DEFINITIONS.findIndex((cooldown) => {
+      return cooldown.key === cooldownKey;
+    });
+
+    return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+  }
+
+  cooldownLabel(cooldownKey) {
+    return cooldownKey.split('-').map((word) => {
+      return `${word.charAt(0).toUpperCase()}${word.slice(1)}`;
+    }).join(' ');
+  }
+
+  cooldownCell(cooldowns) {
+    return {
+      count: cooldowns.length,
+      isEmpty: cooldowns.length === 0,
+      formattedUses: this.formatUses(cooldowns.length),
+      players: this.cooldownPlayers(cooldowns)
+    };
+  }
+
+  cooldownPlayers(cooldowns) {
+    let cooldownsByPlayer = cooldowns.reduce((groupedCooldowns, cooldown) => {
+      let playerName = cooldown.sourceName || 'Unknown';
+
+      if (!groupedCooldowns[playerName]) {
+        groupedCooldowns[playerName] = [];
+      }
+
+      groupedCooldowns[playerName].push(cooldown);
+
+      return groupedCooldowns;
+    }, {});
+
+    return Object.keys(cooldownsByPlayer).sort().map((playerName) => {
+      let playerCooldowns = cooldownsByPlayer[playerName];
+
+      return {
+        name: playerName,
+        count: playerCooldowns.length,
+        formattedUses: this.formatUses(playerCooldowns.length),
+        formattedTimes: playerCooldowns.map((cooldown) => {
+          return cooldown.formattedTime;
+        }).join(', ')
+      };
+    });
+  }
+
+  formatUses(count) {
+    return `${count} ${count === 1 ? 'use' : 'uses'}`;
+  }
+
+  formatClock(milliseconds) {
+    let totalSeconds = Math.max(0, Math.round(milliseconds / 1000));
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    let seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }
 
   formatDuration(milliseconds) {

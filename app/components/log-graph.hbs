@@ -22,7 +22,7 @@
           @fight={{fight}}
           @startOffset={{this.startOffset}}
           @setStartOffset={{this.setStartOffset}}
-          @msPerPixel={{@msPerPixel}}
+          @timelineLength={{@maxRaidLength}}
         />
       {{/each}}
 
@@ -30,7 +30,7 @@
         {{#each @cooldowns as |cooldown|}}
           <CooldownMarker
             @cooldown={{cooldown}}
-            @msPerPixel={{@msPerPixel}}
+            @timelineLength={{@maxRaidLength}}
           />
         {{/each}}
       {{/if}}

@@ -12,7 +12,9 @@ export default class MarkerComponent extends Component {
     }
   }
   get styleAttributes() {
-    let leftOffset = (this.args.interval * 1000) / this.args.msPerPixel;
-    return htmlSafe(`left: ${leftOffset}px;`);
+    let maxLength = this.args.maxLength || 1;
+    let leftOffset = ((this.args.interval * 1000) / maxLength) * 100;
+
+    return htmlSafe(`left: ${leftOffset}%;`);
   }
 }

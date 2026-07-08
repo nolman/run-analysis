@@ -14,8 +14,8 @@ export default class GraphScaleComponent extends Component {
 
   get axisStyle() {
     let axisWidth = Math.max(this.args.maxLength / this.args.msPerPixel, MIN_TIMELINE_WIDTH);
-    let gridIntervalWidth = GRID_INTERVAL_MS / this.args.msPerPixel;
+    let gridIntervalWidth = this.args.maxLength > 0 ? (GRID_INTERVAL_MS / this.args.maxLength) * 100 : 100;
 
-    return htmlSafe(`--timeline-tick-width: ${gridIntervalWidth}px; width: ${axisWidth}px;`);
+    return htmlSafe(`--timeline-tick-width: ${gridIntervalWidth}%; width: ${axisWidth}px;`);
   }
 }

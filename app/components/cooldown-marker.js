@@ -2,10 +2,14 @@ import Component from '@glimmer/component';
 import { htmlSafe } from '@ember/template';
 
 export default class CooldownMarkerComponent extends Component {
-  get styleAttributes() {
-    let leftOffset = this.args.cooldown.offset / this.args.msPerPixel;
+  get timelineLength() {
+    return this.args.timelineLength || 1;
+  }
 
-    return htmlSafe(`left: ${leftOffset}px;`);
+  get styleAttributes() {
+    let leftOffset = (this.args.cooldown.offset / this.timelineLength) * 100;
+
+    return htmlSafe(`left: ${leftOffset}%;`);
   }
 
   get title() {
@@ -14,4 +18,3 @@ export default class CooldownMarkerComponent extends Component {
     return `${cooldown.name} - ${cooldown.sourceName} at ${cooldown.formattedTime}`;
   }
 }
-

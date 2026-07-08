@@ -13,9 +13,9 @@ export default class LogGraphComponent extends Component {
   get timelineStyle() {
     let timelineLength = this.args.maxRaidLength || 0;
     let timelineWidth = Math.max(timelineLength / this.args.msPerPixel, MIN_TIMELINE_WIDTH);
-    let gridIntervalWidth = GRID_INTERVAL_MS / this.args.msPerPixel;
+    let gridIntervalWidth = timelineLength > 0 ? (GRID_INTERVAL_MS / timelineLength) * 100 : 100;
 
-    return htmlSafe(`--timeline-tick-width: ${gridIntervalWidth}px; width: ${timelineWidth}px;`);
+    return htmlSafe(`--timeline-tick-width: ${gridIntervalWidth}%; width: ${timelineWidth}px;`);
   }
 
   @action

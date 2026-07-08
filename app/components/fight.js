@@ -21,12 +21,12 @@ export default class FightComponent extends Component {
     return this.args.fight;
   }
 
-  get msPerPixel() {
-    return this.args.msPerPixel;
-  }
-
   get startOffset() {
     return this.args.startOffset;
+  }
+
+  get timelineLength() {
+    return this.args.timelineLength || 1;
   }
 
   get startTime() {
@@ -47,10 +47,6 @@ export default class FightComponent extends Component {
 
   get isBoss() {
     return this.bossId !== 0;
-  }
-
-  get adjustedStartTime() {
-    return this.startTime - this.startOffset;
   }
 
   get fightLength() {
@@ -85,9 +81,12 @@ export default class FightComponent extends Component {
   }
 
   get styleAttributes() {
-    let width = Math.max((this.endTime - this.startTime) / this.msPerPixel, 4);
-    let leftOffset = (this.adjustedStartTime) / this.msPerPixel;
+    let timelineEndTime = this.startOffset + this.timelineLength;
+    let visibleStartTime = Math.max(this.startTime, this.startOffset);
+    let visibleEndTime = Math.min(this.endTime, timelineEndTime);
+    let width = Math.max(((visibleEndTime - visibleStartTime) / this.timelineLength) * 100, 0);
+    let leftOffset = ((visibleStartTime - this.startOffset) / this.timelineLength) * 100;
 
-    return htmlSafe(`width: ${width}px; left: ${leftOffset}px;`);
+    return htmlSafe(`width: ${width}%; left: ${leftOffset}%;`);
   }
 }

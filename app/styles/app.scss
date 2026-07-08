@@ -282,10 +282,17 @@ h1 {
 
 .run-id {
   color: $muted;
+  display: inline-block;
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   font-size: 12px;
   margin-top: 5px;
   overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.run-id:hover {
+  color: $accent;
+  text-decoration: underline;
 }
 
 .run-actions {
@@ -324,25 +331,35 @@ h1 {
 }
 
 .cooldown-marker {
-  border-left: 2px solid rgba($warning, 0.9);
   bottom: 5px;
+  cursor: default;
   position: absolute;
+  transform: translateX(-50%);
   top: 5px;
-  width: 0;
+  width: 22px;
   z-index: 4;
 }
 
-.cooldown-marker::before {
-  background: $warning;
-  border: 2px solid $surface;
-  border-radius: 50%;
-  box-shadow: 0 1px 3px rgba($ink, 0.18);
-  content: "";
-  height: 8px;
-  left: -5px;
+.cooldown-marker-stack {
+  align-items: stretch;
+  bottom: 0;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 1px;
+  left: 5px;
+  max-height: 56px;
   position: absolute;
-  top: -3px;
-  width: 8px;
+  width: 12px;
+}
+
+.cooldown-marker-segment {
+  border: 1px solid rgba($ink, 0.24);
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba($ink, 0.18);
+  display: block;
+  flex: 1 1 0;
+  min-height: 3px;
+  width: 100%;
 }
 
 .bg-success {
@@ -563,11 +580,26 @@ h1 {
 }
 
 .cooldown-player {
+  align-items: start;
   color: $muted;
-  display: block;
+  display: grid;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 12px;
+  gap: 6px;
+  grid-template-columns: 10px minmax(0, 1fr);
   line-height: 1.35;
+}
+
+.cooldown-player-swatch {
+  margin-top: 3px;
+}
+
+.cooldown-player-detail {
+  min-width: 0;
+}
+
+.cooldown-player-detail span {
+  display: block;
 }
 
 .cooldown-player strong {
@@ -577,6 +609,86 @@ h1 {
 
 .cooldown-empty {
   color: $subtle;
+}
+
+.cooldown-popover {
+  min-width: 260px;
+  padding: 12px;
+}
+
+.cooldown-popover-heading {
+  align-items: start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.cooldown-popover-heading h3 {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.cooldown-popover-heading span {
+  background: rgba($warning, 0.16);
+  border-radius: 999px;
+  color: #815800;
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 5px 7px;
+}
+
+.cooldown-popover-list {
+  border-top: 1px solid $line-soft;
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.cooldown-popover-row {
+  align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+}
+
+.cooldown-class-swatch {
+  border: 1px solid rgba($ink, 0.18);
+  border-radius: 50%;
+  display: block;
+  height: 10px;
+  width: 10px;
+}
+
+.cooldown-popover-detail {
+  min-width: 0;
+}
+
+.cooldown-popover-detail strong,
+.cooldown-popover-detail span {
+  display: block;
+  line-height: 1.25;
+}
+
+.cooldown-popover-detail strong {
+  font-size: 13px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.cooldown-popover-detail span {
+  color: $muted;
+  font-size: 12px;
+}
+
+.cooldown-popover-row time {
+  color: $muted;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .ember-popover {

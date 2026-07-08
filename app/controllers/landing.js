@@ -1,7 +1,9 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { htmlSafe } from '@ember/template';
 import { compact, concat, max, min, sum, times, uniq, values, without } from 'lodash';
+import { classColorFor } from 'run-analysis/utils/class-colors';
 import { DPS_COOLDOWN_DEFINITIONS } from 'run-analysis/utils/dps-cooldowns';
 
 const OFFSET_SEPARATOR = '~';
@@ -333,6 +335,7 @@ export default class LandingController extends Controller {
       return {
         name: playerName,
         count: playerCooldowns.length,
+        classColorStyle: htmlSafe(`background: ${classColorFor(playerCooldowns[0].sourceType)};`),
         formattedUses: this.formatUses(playerCooldowns.length),
         formattedTimes: playerCooldowns.map((cooldown) => {
           return cooldown.formattedTime;

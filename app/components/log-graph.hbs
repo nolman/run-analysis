@@ -2,7 +2,7 @@
   <div class="run-label">
     <div>
       <h2>{{@log.title}}</h2>
-      <div class="run-id">{{@key}}</div>
+      <a class="run-id" href={{this.reportUrl}} target="_blank" rel="noopener noreferrer">{{@key}}</a>
     </div>
 
     <div class="run-actions">
@@ -15,8 +15,8 @@
     </div>
   </div>
 
-  <div class="timeline-viewport">
-    <div class="log-graph" style={{this.timelineStyle}}>
+  <div class="timeline-viewport" {{on "mouseenter" this.measureGraphWidth}} {{on "focusin" this.measureGraphWidth}}>
+    <div id={{this.graphElementId}} class="log-graph" style={{this.timelineStyle}}>
       {{#each @log.fights as |fight|}}
         <Fight
           @fight={{fight}}
@@ -27,9 +27,9 @@
       {{/each}}
 
       {{#if @showCooldowns}}
-        {{#each @cooldowns as |cooldown|}}
+        {{#each this.cooldownGroups as |cooldownGroup|}}
           <CooldownMarker
-            @cooldown={{cooldown}}
+            @cooldownGroup={{cooldownGroup}}
             @timelineLength={{@maxRaidLength}}
           />
         {{/each}}

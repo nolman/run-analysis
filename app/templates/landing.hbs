@@ -140,8 +140,11 @@
                       <span class="cooldown-uses">{{cell.formattedUses}}</span>
                       {{#each cell.players as |player|}}
                         <span class="cooldown-player">
-                          <strong>{{player.name}}</strong>
-                          <span>{{player.formattedUses}} at {{player.formattedTimes}}</span>
+                          <span class="cooldown-class-swatch cooldown-player-swatch" style={{player.classColorStyle}}></span>
+                          <span class="cooldown-player-detail">
+                            <strong>{{player.name}}</strong>
+                            <span>{{player.formattedUses}} at {{player.formattedTimes}}</span>
+                          </span>
                         </span>
                       {{/each}}
                     {{/if}}

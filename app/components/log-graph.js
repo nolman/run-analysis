@@ -148,6 +148,18 @@ export default class LogGraphComponent extends Component {
   }
 
   @action
+  commitRunName(event) {
+    this.args.setRunName(event.target.value);
+  }
+
+  @action
+  handleRunNameKeydown(event) {
+    if (event.key === 'Enter') {
+      event.target.blur();
+    }
+  }
+
+  @action
   resetOffset() {
     this.args.setStartOffset(0);
   }

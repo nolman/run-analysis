@@ -272,12 +272,29 @@ h1 {
   padding: 16px;
 }
 
-.run-label h2 {
+.run-title-input {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: inherit;
+  font-family: inherit;
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.25;
-  overflow-wrap: anywhere;
+  margin: -3px -7px;
+  padding: 2px 6px;
+  width: calc(100% + 14px);
+}
+
+.run-title-input:hover {
+  border-color: $line;
+}
+
+.run-title-input:focus {
+  background: $surface;
+  border-color: $accent;
+  outline: none;
 }
 
 .run-id {
@@ -511,6 +528,11 @@ h1 {
 
 .breakdown-table tbody td.is-missing {
   color: $subtle;
+}
+
+.breakdown-table tbody tr:nth-child(even) th,
+.breakdown-table tbody tr:nth-child(even) td {
+  background: $surface-soft;
 }
 
 .breakdown-table tbody tr:last-child th,

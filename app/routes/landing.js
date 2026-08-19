@@ -10,7 +10,8 @@ const MAX_EVENT_PAGES = 20;
 export default class LandingRoute extends Route {
   queryParams = {
     logids: { refreshModel: true },
-    offsets: { refreshModel: false }
+    offsets: { refreshModel: false },
+    names: { refreshModel: false }
   };
 
   model(params) {

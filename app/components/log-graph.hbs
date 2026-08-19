@@ -1,7 +1,15 @@
 <div class="run-row">
   <div class="run-label">
     <div>
-      <h2>{{@log.title}}</h2>
+      <input
+        aria-label="Run name"
+        class="run-title-input"
+        title="Click to rename run"
+        type="text"
+        value={{@log.title}}
+        {{on "change" this.commitRunName}}
+        {{on "keydown" this.handleRunNameKeydown}}
+      />
       <a class="run-id" href={{this.reportUrl}} target="_blank" rel="noopener noreferrer">{{@key}}</a>
     </div>
 

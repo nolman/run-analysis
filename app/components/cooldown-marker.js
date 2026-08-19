@@ -9,11 +9,15 @@ export default class CooldownMarkerComponent extends Component {
         enabled: false
       },
       offset: {
-        offset: '0, -16'
+        offset: '0, 0'
       },
       preventOverflow: {
         enabled: true,
-        escapeWithReference: false
+        escapeWithReference: false,
+        boundariesElement: 'viewport'
+      },
+      hide: {
+        enabled: false
       }
     }
   };

@@ -10,10 +10,11 @@ const OFFSET_SEPARATOR = '~';
 const OFFSET_PAIR_SEPARATOR = ':';
 
 export default class LandingController extends Controller {
-  queryParams = ['logids', 'offsets'];
+  queryParams = ['logids', 'offsets', 'names'];
   @tracked newLogId = '';
   @tracked logids = '';
   @tracked offsets = '';
+  @tracked names = '';
   @tracked msPerPixel = 5000;
   @tracked showCooldowns = false;
 
@@ -35,6 +36,7 @@ export default class LandingController extends Controller {
 
   get summaryRuns() {
     let startOffsets = this.startOffsets;
+    let customNames = this.customNames;
 
     return Object.keys(this.model || {}).map((logId) => {
       let log = this.model[logId].data;
@@ -47,7 +49,7 @@ export default class LandingController extends Controller {
 
       return {
         logId,
-        title: log.title || logId,
+        title: customNames[logId] || log.title || logId,
         startOffset,
         fights,
         cooldowns: this.cooldownsForRun(this.model[logId].cooldowns || [], startOffset),
@@ -165,6 +167,38 @@ export default class LandingController extends Controller {
     return Object.keys(startOffsets).map((logId) => {
       return `${logId}${OFFSET_PAIR_SEPARATOR}${startOffsets[logId]}`;
     }).join(OFFSET_SEPARATOR);
+  }
+
+  get customNames() {
+    return compact((this.names || '').split(OFFSET_SEPARATOR)).reduce((customNames, pair) => {
+      let separatorIndex = pair.indexOf(OFFSET_PAIR_SEPARATOR);
+
+      if (separatorIndex > 0) {
+        let logId = pair.slice(0, separatorIndex);
+        let name = this.decodeName(pair.slice(separatorIndex + 1));
+
+        if (name) {
+          customNames[logId] = name;
+        }
+      }
+
+      return customNames;
+    }, {});
+  }
+
+  serializeNames(customNames) {
+    return Object.keys(customNames).map((logId) => {
+      // encodeURIComponent leaves `~` alone, but it is our pair separator
+      return `${logId}${OFFSET_PAIR_SEPARATOR}${encodeURIComponent(customNames[logId]).replace(/~/g, '%7E')}`;
+    }).join(OFFSET_SEPARATOR);
+  }
+
+  decodeName(encodedName) {
+    try {
+      return decodeURIComponent(encodedName);
+    } catch (error) {
+      return encodedName;
+    }
   }
 
   bossLabelForIndex(bossIndex) {
@@ -422,6 +456,23 @@ export default class LandingController extends Controller {
     let newLogsIds = without(existingIds, logId);
     this.logids = newLogsIds.join('~');
     this.setStartOffset(logId, 0);
+    this.setRunName(logId, '');
+  }
+
+  @action
+  setRunName(logId, name) {
+    let customNames = {
+      ...this.customNames
+    };
+    let trimmedName = (name || '').trim();
+
+    if (trimmedName) {
+      customNames[logId] = trimmedName;
+    } else {
+      delete customNames[logId];
+    }
+
+    this.names = this.serializeNames(customNames);
   }
 
   @action
